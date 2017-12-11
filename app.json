@@ -15,7 +15,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "bundleIdentifier": "com.golaso",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.golaso"
     }
   }
 }

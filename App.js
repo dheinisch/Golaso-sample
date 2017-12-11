@@ -3,7 +3,9 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
+import LoginScreen from './screens/LoginScreen';
 import * as firebase from 'firebase';
+import Spinner from './components/Spinner';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -16,15 +18,31 @@ const firebaseConfig = {
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
+    loadingUserCompleted: false
   };
 
-  componentDidMount() {
-      firebase.initializeApp(firebaseConfig);
+  componentWillMount() {
+      var that = this;
+      firebase.initializeApp(firebaseConfig);firebase.auth().onAuthStateChanged(function(user) {
+          that.authStatusChanged(user)});
       console.log("Firebase Initialized");
   }
 
+  authStatusChanged(user) {
+      this.setState({ loadingUserCompleted: true });
+      if (user !== null) {
+          if (user.emailVerified) {
+              this.setState({success: true});
+          } else {
+              user.sendEmailVerification();
+          }
+      }
+  }
+
   render() {
-    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+      var user = firebase.auth().currentUser;
+
+      if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
           startAsync={this._loadResourcesAsync}
@@ -37,7 +55,9 @@ export default class App extends React.Component {
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
-          <RootNavigation />
+          {!this.state.loadingUserCompleted && <Spinner size="large" />}
+          {this.state.loadingUserCompleted && user && <RootNavigation/>}
+          {this.state.loadingUserCompleted &&!user && <LoginScreen/>}
         </View>
       );
     }

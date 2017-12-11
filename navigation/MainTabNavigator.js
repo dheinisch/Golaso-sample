@@ -8,12 +8,11 @@ import Colors from '../constants/Colors';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import LoginScreen from "../screens/LoginScreen";
 
 export default TabNavigator(
   {
     Home: {
-      screen: LoginScreen,
+      screen: HomeScreen,
     },
     Links: {
       screen: LinksScreen,
