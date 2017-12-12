@@ -3,10 +3,11 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
-import LoginScreen from './screens/LoginScreen';
 import GroupsScreen from './screens/GroupsScreen';
 import * as firebase from 'firebase';
 import Spinner from './components/Spinner';
+import LoginScreen from "./screens/login/LoginScreen";
+import SignupScreen from "./screens/signup/SignupScreen";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -54,7 +55,11 @@ export default class App extends React.Component {
           {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
           {!this.state.loadingUserCompleted && <Spinner size="large" />}
           {this.state.loadingUserCompleted && user && <GroupsScreen/>}
-          {this.state.loadingUserCompleted && !user && <LoginScreen/>}
+            {this.state.loadingUserCompleted && !user &&
+            <View style={styles.container}>
+                <LoginScreen/>
+            </View>
+            }
         </View>
       );
     }

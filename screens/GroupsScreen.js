@@ -17,6 +17,7 @@ export default class GroupsScreen extends Component {
     }
 
     render() {
+        firebase.auth().signOut();
         return (
             <View>
                 <View>
