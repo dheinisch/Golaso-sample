@@ -22,8 +22,7 @@ export default class LoginScreen extends Component {
                 if (errorCode === 'auth/invalid-email') {
                     that.setState({msg: 'Invalid email.', loading: false});
                 }
-                if (errorCode === 'auth/auth/user-not-found') {
-                    //Login was not successful, let's create a new account
+                if (errorCode === 'auth/user-not-found') {
                     firebase.auth().createUserWithEmailAndPassword(email, password)
                         .then(() => {
                             that.setState({msg: 'Check your email to continue', loading: false});
@@ -31,7 +30,6 @@ export default class LoginScreen extends Component {
                         .catch((error) => {
                             var errorCode = error.code;
                             if (errorCode === 'auth/email-already-in-use') {
-                                //TODO
                             }
                             that.setState({msg: 'Wrong email or password.', loading: false});
                         });
@@ -43,6 +41,7 @@ export default class LoginScreen extends Component {
         if (this.state.loading) {
             return <Spinner size="small"/>;
         }
+
         return <Button
             onPress={this.onLoginPress.bind(this)}
             title="Log in" />;
@@ -57,6 +56,7 @@ export default class LoginScreen extends Component {
                     rightComponent={null}
                 />
                 <FormLabel>Email</FormLabel>
+                {/*<Icon name="email-outline" type="material-community" style={styles.actionButtonIcon} />*/}
                 <FormInput
                     value={this.state.email}
                     onChangeText={email => this.setState({ email })}/>
