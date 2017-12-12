@@ -17,7 +17,13 @@ const lockIcon = require("../../assets/images/lock.png");
 const personIcon = require("../../assets/images/person.png");
 
 export default class LoginScreen extends Component {
+    static navigationOptions = {
+        title: 'Login',
+    };
+
     render() {
+        const { navigate } = this.props.navigation;
+
         return (
             <View style={styles.container}>
                     <View style={styles.markWrap}>
@@ -59,7 +65,7 @@ export default class LoginScreen extends Component {
                     <View style={styles.container}>
                         <View style={styles.signupWrap}>
                             <Text style={styles.accountText}>Don't have an account?</Text>
-                            <TouchableOpacity activeOpacity={.5}>
+                            <TouchableOpacity activeOpacity={.5} onPress={() => navigate('Signup')}>
                                 <View>
                                     <Text style={styles.signupLinkText}>Sign Up</Text>
                                 </View>
@@ -123,7 +129,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     forgotPasswordText: {
-        color: "#D8D8D8",
+        color: "#000",
         backgroundColor: "transparent",
         textAlign: "right",
         paddingRight: 15,
@@ -135,7 +141,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     accountText: {
-        color: "#D8D8D8"
+        color: "#000"
     },
     signupLinkText: {
         color: "#000",

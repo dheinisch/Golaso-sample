@@ -10,7 +10,8 @@ export default class GroupsScreen extends Component {
 
     componentDidMount() {
         let that = this;
-        let db = firebase.database().ref("users/memberOf");
+        var user = firebase.auth().currentUser;
+        let db = firebase.database().ref("users/" + user.uid + "/memberOf");
         db.on('value', function (snapshot) {
             that.setState({groups: snapshot.val(), loadingCompleted: true});
         })

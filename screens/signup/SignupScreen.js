@@ -15,31 +15,14 @@ const emailIcon = require("../../assets/images/email.png");
 const birthdayIcon = require("../../assets/images/birthday.png");
 
 export default class SignupScreen extends Component {
+    static navigationOptions = {
+        title: 'Signup',
+    };
     render() {
         return (
             <View style={styles.container}>
-
-                    <View style={styles.headerContainer}>
-
-                        <View style={styles.headerIconView}>
-                            <TouchableOpacity style={styles.headerBackButtonView}>
-                                <Image
-                                    source={backIcon}
-                                    style={styles.backButtonIcon}
-                                    resizeMode="contain"
-                                />
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.headerTitleView}>
-                            <Text style={styles.titleViewText}>Sign Up</Text>
-                        </View>
-
-                    </View>
-
                     <View style={styles.inputsContainer}>
-
-                        <View style={styles.inputContainer}>
+                        <View style={styles.inputWrap}>
                             <View style={styles.iconContainer}>
                                 <Image
                                     source={personIcon}
@@ -48,13 +31,12 @@ export default class SignupScreen extends Component {
                                 />
                             </View>
                             <TextInput
-                                style={[styles.input, styles.whiteFont]}
+                                style={[styles.input]}
                                 placeholder="Name"
                                 placeholderTextColor="#000"
                                 underlineColorAndroid='transparent'
                             />
                         </View>
-
                         <View style={styles.inputContainer}>
                             <View style={styles.iconContainer}>
                                 <Image
@@ -64,12 +46,11 @@ export default class SignupScreen extends Component {
                                 />
                             </View>
                             <TextInput
-                                style={[styles.input, styles.whiteFont]}
+                                style={[styles.input]}
                                 placeholder="Email"
                                 placeholderTextColor="#000"
                             />
                         </View>
-
                         <View style={styles.inputContainer}>
                             <View style={styles.iconContainer}>
                                 <Image
@@ -80,12 +61,11 @@ export default class SignupScreen extends Component {
                             </View>
                             <TextInput
                                 secureTextEntry={true}
-                                style={[styles.input, styles.whiteFont]}
+                                style={[styles.input]}
                                 placeholder="Password"
                                 placeholderTextColor="#000"
                             />
                         </View>
-
                         <View style={styles.inputContainer}>
                             <View style={styles.iconContainer}>
                                 <Image
@@ -95,26 +75,17 @@ export default class SignupScreen extends Component {
                                 />
                             </View>
                             <TextInput
-                                style={[styles.input, styles.whiteFont]}
+                                style={[styles.input]}
                                 placeholder="Birthday"
                                 placeholderTextColor="#000"
                                 underlineColorAndroid='transparent'
                             />
                         </View>
-
                     </View>
-
                     <View style={styles.footerContainer}>
-
                         <TouchableOpacity>
                             <View style={styles.signup}>
-                                <Text style={styles.whiteFont}>Join</Text>
-                            </View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity>
-                            <View style={styles.signin}>
-                                <Text style={styles.greyFont}>Already have an account?<Text style={styles.whiteFont}> Sign In</Text></Text>
+                                <Text>Join</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -139,6 +110,13 @@ let styles = StyleSheet.create({
         flex: 3,
         marginTop: 50,
     },
+    inputWrap: {
+        flexDirection: "row",
+        marginVertical: 10,
+        height: 40,
+        borderBottomWidth: 1,
+        borderBottomColor: "#CCC"
+    },
     footerContainer: {
         flex: 1
     },
@@ -162,6 +140,7 @@ let styles = StyleSheet.create({
     },
     titleViewText: {
         fontSize: 40,
+        flex: 1,
         color: '#000',
     },
     inputs: {
@@ -186,7 +165,7 @@ let styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        fontSize: 20,
+        paddingHorizontal: 10,
     },
     signup: {
         backgroundColor: '#FF3366',
@@ -202,8 +181,5 @@ let styles = StyleSheet.create({
     },
     greyFont: {
         color: '#D8D8D8'
-    },
-    whiteFont: {
-        color: '#000'
     }
 })

@@ -18,6 +18,10 @@ const firebaseConfig = {
 };
 
 export default class App extends React.Component {
+  static navigationOptions = {
+      title: 'Welcome',
+  };
+
   state = {
     isLoadingComplete: false,
     loadingUserCompleted: false
@@ -57,7 +61,7 @@ export default class App extends React.Component {
           {this.state.loadingUserCompleted && user && <GroupsScreen/>}
             {this.state.loadingUserCompleted && !user &&
             <View style={styles.container}>
-                <LoginScreen/>
+                <RootNavigation/>
             </View>
             }
         </View>
