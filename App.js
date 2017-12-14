@@ -28,22 +28,11 @@ export default class App extends React.Component {
   };
 
   componentWillMount() {
-      var that = this;
-      firebase.initializeApp(firebaseConfig);firebase.auth().onAuthStateChanged(function(user) {
-          that.authStatusChanged(user)});
+      firebase.initializeApp(firebaseConfig);
       console.log("Firebase Initialized");
   }
 
-  authStatusChanged(user) {
-      this.setState({ loadingUserCompleted: true });
-      if (user !== null) {
-          this.setState({success: true});
-      }
-  }
-
   render() {
-      var user = firebase.auth().currentUser;
-
       if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
@@ -57,13 +46,9 @@ export default class App extends React.Component {
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           {Platform.OS === 'android' && <View style={styles.statusBarUnderlay} />}
-          {!this.state.loadingUserCompleted && <Spinner size="large" />}
-          {this.state.loadingUserCompleted && user && <GroupsScreen/>}
-            {this.state.loadingUserCompleted && !user &&
             <View style={styles.container}>
                 <RootNavigation/>
             </View>
-            }
         </View>
       );
     }

@@ -5,19 +5,23 @@ import {
     View,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native'
+import Spinner from "../../components/Spinner";
+import firebase from 'firebase';
 
-const backIcon = require("../../assets/images/back.png");
 const personIcon = require("../../assets/images/person.png");
 const lockIcon = require("../../assets/images/lock.png");
 const emailIcon = require("../../assets/images/email.png");
-const birthdayIcon = require("../../assets/images/birthday.png");
 
 export default class SignupScreen extends Component {
     static navigationOptions = {
         title: 'Signup',
     };
+
+    state = { email: '', password: '', username: '', loading: false };
+
     render() {
         return (
             <View style={styles.container}>
@@ -35,6 +39,7 @@ export default class SignupScreen extends Component {
                                 placeholder="Name"
                                 placeholderTextColor="#000"
                                 underlineColorAndroid='transparent'
+                                onChangeText={username => this.setState({ username })}
                             />
                         </View>
                         <View style={styles.inputContainer}>
@@ -49,6 +54,7 @@ export default class SignupScreen extends Component {
                                 style={[styles.input]}
                                 placeholder="Email"
                                 placeholderTextColor="#000"
+                                onChangeText={email => this.setState({ email })}
                             />
                         </View>
                         <View style={styles.inputContainer}>
@@ -64,33 +70,58 @@ export default class SignupScreen extends Component {
                                 style={[styles.input]}
                                 placeholder="Password"
                                 placeholderTextColor="#000"
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <View style={styles.iconContainer}>
-                                <Image
-                                    source={birthdayIcon}
-                                    style={styles.inputIcon}
-                                    resizeMode="contain"
-                                />
-                            </View>
-                            <TextInput
-                                style={[styles.input]}
-                                placeholder="Birthday"
-                                placeholderTextColor="#000"
-                                underlineColorAndroid='transparent'
+                                onChangeText={password => this.setState({ password })}
                             />
                         </View>
                     </View>
                     <View style={styles.footerContainer}>
-                        <TouchableOpacity>
+                        {!this.state.loading &&
+                        <TouchableOpacity onPress={() => this.onSignupPress()}>
                             <View style={styles.signup}>
                                 <Text>Join</Text>
                             </View>
                         </TouchableOpacity>
+                        }
+                        {this.state.loading &&
+                        <TouchableOpacity>
+                            <View style={styles.signup}>
+                                <Spinner size='small' color='#FFF'/>
+                            </View>
+                        </TouchableOpacity>
+                        }
                     </View>
             </View>
         );
+    }
+
+    onSignupPress() {
+        this.setState({ loading: true });
+
+        const { email, password } = this.state;
+        let that = this;
+
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((user) => {
+                user.updateProfile({
+                    displayName: that.state.username
+                }).then(() => {
+                    user.sendEmailVerification().then(() => {
+                        if (user !== null && !user.emailVerified) {
+                            Alert.alert("Check " + user.email + " to continue...");
+                        }
+                        setTimeout(this.props.navigation.goBack, 0)
+                    })
+                }).catch(() => {
+                    //TODO
+                });
+                that.setState({ loading: false });
+            })
+            .catch((error) => {
+                let errorCode = error.code;
+                if (errorCode === 'auth/email-already-in-use') {
+                }
+                that.setState({ loading: false });
+            });
     }
 }
 
