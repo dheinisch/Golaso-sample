@@ -16,9 +16,6 @@ const lockIcon = require("../../assets/images/lock.png");
 const emailIcon = require("../../assets/images/email.png");
 
 export default class SignupScreen extends Component {
-    static navigationOptions = {
-        title: 'Signup',
-    };
 
     state = { email: '', password: '', username: '', loading: false };
 
@@ -107,7 +104,7 @@ export default class SignupScreen extends Component {
                 }).then(() => {
                     user.sendEmailVerification().then(() => {
                         if (user !== null && !user.emailVerified) {
-                            Alert.alert("Check " + user.email + " to continue...");
+                            Alert.alert(user.displayName + " Please check " + user.email + " to continue...");
                         }
                         setTimeout(this.props.navigation.goBack, 0)
                     })

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 import Spinner from '../../components/Spinner';
-
+import { NavigationActions } from 'react-navigation'
 const { width, height } = Dimensions.get("window");
 
 const mark = require("../../assets/images/mark.png");
@@ -19,20 +19,30 @@ const lockIcon = require("../../assets/images/lock.png");
 const personIcon = require("../../assets/images/person.png");
 
 export default class LoginScreen extends Component {
-    static navigationOptions = {
-        title: 'Login',
-    };
 
-    state = { email: '', password: '', msg: '', loading: false, initUserCompleted: false };
+    state = { email: '', password: '', msg: '', loading: false, initUserCompleted: false, userIsVerified: false };
 
     componentDidMount() {
         let that = this;
-        // TODO - move this to App.js and load login screen only if user not exist.. otherwise load GroupsScreen. that way i don't have to register for this event and unregister from within the event on the first call...
         this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
             that.handleUserLoggedIn(user);
             that.unsubscribe();
-            this.setState({ initUserCompleted: true});
+            that.setState({ initUserCompleted: true});
+            if (this.state.userIsVerified) {
+                that.loginCompleted();
+            }
         })
+    }
+
+    loginCompleted() {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            key: null,
+            actions: [
+                NavigationActions.navigate({ routeName: 'Groups'})
+            ]
+        });
+        this.props.navigation.dispatch(resetAction)
     }
 
     render() {
@@ -128,26 +138,24 @@ export default class LoginScreen extends Component {
                 let errorCode = error.code;
                 if (errorCode === 'auth/wrong-password') {
                     that.setState({ loading: false });
-                    // TODO
+                    Alert.alert(password + " is incorrect.");
                 }
                 if (errorCode === 'auth/invalid-email') {
                     that.setState({ loading: false });
-                    // TODO
+                    Alert.alert(email + " is incorrect.");
                 }
                 if (errorCode === 'auth/user-not-found') {
                     that.setState({ loading: false });
-                    // TODO
+                    Alert.alert("User doesn't exist. Please Sign Up.");
                 }
             });
     }
 
     handleUserLoggedIn(user) {
-        const { navigate } = this.props.navigation;
-
         if (user !== null && user.emailVerified) {
-            navigate('Groups');
+            this.setState({ userIsVerified: true });
         } else if (user !== null && !user.emailVerified && this.state.initUserCompleted) {
-            Alert.alert("Check " + user.email + " to continue...");
+            Alert.alert(user.displayName + " Please check " + user.email + " to continue...");
         }
     }
 
